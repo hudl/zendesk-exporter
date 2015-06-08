@@ -16,13 +16,13 @@ type ZendeskConfig struct {
 var cfg *ZendeskConfig = nil
 
 func readConfig() *ZendeskConfig {
-	cfg = ZendeskConfig{}
+	cfg = &ZendeskConfig{}
 	bytes, err := ioutil.ReadFile(cfgFileName)
 	if err != nil {
 		return &ZendeskConfig{}
 	}
-	json.Unmarshal(bytes, &cfg)
-	return &cfg
+	json.Unmarshal(bytes, cfg)
+	return cfg
 }
 
 func GetZDConfig() ZendeskConfig {
