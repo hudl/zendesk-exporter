@@ -1,0 +1,5 @@
+{
+	"BaseUrl": "https://hudl.zendesk.com/api/v2/",
+	"Username": "MY_ZENDESK_USERNAME",
+	"Password": "MY_ZENDESK_PASSWORD"
+}
