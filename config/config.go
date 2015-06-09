@@ -19,9 +19,13 @@ func readConfig() *ZendeskConfig {
 	cfg = &ZendeskConfig{}
 	bytes, err := ioutil.ReadFile(cfgFileName)
 	if err != nil {
+		log.Error("Error while reading file %v: %+v", cfgFileName, err)
 		return &ZendeskConfig{}
 	}
-	json.Unmarshal(bytes, cfg)
+	err = json.Unmarshal(bytes, cfg)
+	if err != nil {
+		log.Error("Error unmarshaling config file json: %+v", err)
+	}
 	return cfg
 }
 
