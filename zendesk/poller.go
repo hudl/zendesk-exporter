@@ -4,6 +4,7 @@ package zendesk
 
 import (
 	"github.com/adamar/ZeGo/zego"
+	"strconv"
 	"time"
 
 	"github.com/hudl/zendesk-exporter/ticketwriter"
@@ -23,6 +24,10 @@ const (
 type Poller struct {
 	Auth      zego.Auth
 	StartTime string
+	TickWrt   ticketwriter.TicketWriter
+
+	// This is to prevent duplicates during low activity times
+	PrevTickId uint64
 }
 
 // Poll continuously hits the IncrementalTicket API starting from
@@ -38,8 +43,17 @@ func (p *Poller) Poll() {
 		}
 		log.Info("Fetched %d tickets.", results.Count)
 
-		ticketwriter.Write(results.Tickets)
+		if results.Count == 0 || results.Tickets[len(results.Tickets)-1].Id == p.PrevTickId || results.Next_page == "" {
+			log.Info("Sleeping for 5 minutes then using the same start time")
+			time.Sleep(5 * time.Minute)
+			continue
+		}
 
+		p.TickWrt.Write(results.Tickets, p.StartTime)
+		p.PrevTickId = results.Tickets[len(results.Tickets)-1].Id
+		p.StartTime = strconv.Itoa(int(results.EndTime))
+		startTime := time.Unix(int64(results.EndTime), 0)
+		log.Info("Next start time is: %s (%s)", p.StartTime, startTime.Format("2006-01-02"))
 		sleepTime := time.Duration(interpSleep(float32(results.Count)))
 		log.Info("Sleeping for %d seconds", sleepTime)
 		time.Sleep(sleepTime * time.Second)

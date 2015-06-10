@@ -4,3 +4,4 @@ zendesk-exporter
 Godeps/_workspace*
 
 log/*
+bin/*

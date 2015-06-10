@@ -1,3 +1,4 @@
+// Package config reads configuration information from a file.
 package config
 
 import (
@@ -12,15 +13,28 @@ type ZendeskConfig struct {
 	Username string
 	Password string
 }
+type AWSConfig struct {
+	S3BucketName string
+	S3KeyPrefix  string
+	AccessKey    string
+	SecretKey    string
+}
+type Config struct {
+	ZDConf      ZendeskConfig
+	AWSConf     AWSConfig
+	MaxFileSize uint64
+}
 
-var cfg *ZendeskConfig = nil
+var cfg *Config = nil
 
-func readConfig() *ZendeskConfig {
-	cfg = &ZendeskConfig{}
+// readConfig reads the config from `cfgFileName` and Unmarshals the data
+// into a Config struct
+func readConfig() *Config {
+	cfg = &Config{}
 	bytes, err := ioutil.ReadFile(cfgFileName)
 	if err != nil {
 		log.Error("Error while reading file %v: %+v", cfgFileName, err)
-		return &ZendeskConfig{}
+		return &Config{}
 	}
 	err = json.Unmarshal(bytes, cfg)
 	if err != nil {
@@ -29,7 +43,9 @@ func readConfig() *ZendeskConfig {
 	return cfg
 }
 
-func GetZDConfig() ZendeskConfig {
+// GetConfig determines whether the config singleton is already initialized.
+// If it is initialized, it is simply returned. Else, a call to readConfig is made.
+func GetConfig() Config {
 	if cfg == nil {
 		cfg = readConfig()
 	}
