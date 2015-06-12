@@ -39,6 +39,7 @@ func readConfig() *Config {
 	err = json.Unmarshal(bytes, cfg)
 	if err != nil {
 		log.Error("Error unmarshaling config file json: %+v", err)
+		panic(err)
 	}
 	return cfg
 }

@@ -17,7 +17,10 @@ var log = golog.MustGetLogger("main")
 func main() {
 	logging.Configure()
 	log.Info("Starting...")
-
+	if len(os.Args) != 2 {
+		log.Error("Usage: %s <starttime>", os.Args[0])
+		return
+	}
 	startTime := os.Args[1]
 	if startTime == "" {
 		log.Error("No start time specified. Exiting.")

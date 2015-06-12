@@ -29,11 +29,15 @@ func (tickWrt *TicketWriter) uploadToS3() {
 	//read into buffer
 	buffer := bufio.NewReader(file)
 	_, err = buffer.Read(bytes)
+	if err != nil {
+		log.Error("Error reading bytes from File=%s: %+v", file.Name(), err)
+		panic(err)
+	}
 
 	filetype := http.DetectContentType(bytes)
 	err = bucket.Put(path, bytes, filetype, s3.AuthenticatedRead, s3.Options{})
 	if err != nil {
-		log.Error("Error uploading file to S3: %+v", err)
+		log.Error("Error uploading file contents to S3 path %s : %+v", path, err)
 		panic(err)
 	}
 }

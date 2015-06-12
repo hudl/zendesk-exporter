@@ -38,7 +38,7 @@ func (p *Poller) Poll() {
 	for {
 		results, err := p.Auth.IncrementalTicket(p.StartTime)
 		if err != nil {
-			log.Error("Error when polling for zendesk tickets: %+v", err)
+			log.Error("Error when polling for zendesk tickets with StartTime=%s: %+v", p.StartTime, err)
 			return
 		}
 		log.Info("Fetched %d tickets.", results.Count)
