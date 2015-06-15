@@ -3,8 +3,8 @@
 package zendesk
 
 import (
+	"fmt"
 	"github.com/adamar/ZeGo/zego"
-	"strconv"
 	"time"
 
 	"github.com/hudl/zendesk-exporter/ticketwriter"
@@ -51,12 +51,14 @@ func (p *Poller) Poll() {
 
 		p.TickWrt.Write(results.Tickets, p.StartTime)
 		p.PrevTickId = results.Tickets[len(results.Tickets)-1].Id
-		p.StartTime = strconv.Itoa(int(results.EndTime))
+		p.StartTime = fmt.Sprintf("%d", results.EndTime)
 		startTime := time.Unix(int64(results.EndTime), 0)
-		log.Info("Next start time is: %s (%s)", p.StartTime, startTime.Format("2006-01-02"))
-		sleepTime := time.Duration(interpSleep(float32(results.Count)))
-		log.Info("Sleeping for %d seconds", sleepTime)
-		time.Sleep(sleepTime * time.Second)
+		log.Info("Next start time is: %s (%s)", p.StartTime, startTime.Format("2006-01-02 15:04:05"))
+
+		//And we sleep for a reasonable amount of time
+		sleepTime := time.Duration(interpSleep(float32(results.Count))) * time.Second
+		log.Info("Sleeping for %f seconds", sleepTime.Seconds())
+		time.Sleep(sleepTime)
 	}
 }
 
