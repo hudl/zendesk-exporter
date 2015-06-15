@@ -1,0 +1,26 @@
+{
+	"ImportPath": "github.com/hudl/zendesk-exporter",
+	"GoVersion": "go1.3.3",
+	"Deps": [
+		{
+			"ImportPath": "github.com/adamar/ZeGo/zego",
+			"Rev": "e72c5956ce1210ac9e2b8fb4e1be44c0e2e39584"
+		},
+		{
+			"ImportPath": "github.com/goamz/goamz/aws",
+			"Rev": "50f393d45473b635cab34f2b3e0bbcd103df29dc"
+		},
+		{
+			"ImportPath": "github.com/goamz/goamz/s3",
+			"Rev": "50f393d45473b635cab34f2b3e0bbcd103df29dc"
+		},
+		{
+			"ImportPath": "github.com/op/go-logging",
+			"Rev": "fb0230561a6ba1cab17beb95f1faedc16584fdb8"
+		},
+		{
+			"ImportPath": "github.com/vaughan0/go-ini",
+			"Rev": "a98ad7ee00ec53921f08832bc06ecf7fd600e6a1"
+		}
+	]
+}

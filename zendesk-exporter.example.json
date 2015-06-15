@@ -1,0 +1,14 @@
+{
+	"ZDConf":{
+		"BaseUrl": "hudl.zendesk.com",
+		"Username": "MY_ZENDESK_USERNAME",
+		"Password": "MY_ZENDESK_PASSWORD"
+	},
+	"AWSConf":{
+		"AccessKey": "ACCESS_KEY",
+		"SecretKey": "SECRET_KEY",
+		"S3BucketName": "S3Bucket",
+		"S3KeyPrefix": "S3KeyPrefix"
+	},
+	"MaxFileSize": "64M"
+}
