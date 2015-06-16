@@ -30,7 +30,7 @@ func main() {
 
 	cfg := config.GetConfig()
 	aconf := cfg.AWSConf
-	tickWrt := ticketwriter.New(cfg.MaxFileSize, "ticks_", aconf.S3BucketName, aconf.S3KeyPrefix, aconf.AccessKey, aconf.SecretKey)
+	tickWrt := ticketwriter.New(cfg.MaxFileSize, "ticks_", aconf.S3BucketName, aconf.S3KeyPrefix, aconf.AccessKey, aconf.SecretKey, aconf.KinesisStream)
 	auth := zego.Auth{cfg.ZDConf.Username, cfg.ZDConf.Password, cfg.ZDConf.BaseUrl}
 	poller := zendesk.Poller{
 		auth,

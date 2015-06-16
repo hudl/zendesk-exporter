@@ -2,11 +2,11 @@ package ticketwriter
 
 import (
 	"bufio"
+	"net/http"
+	"os"
+
 	"github.com/goamz/goamz/aws"
 	"github.com/goamz/goamz/s3"
-	"net/http"
-
-	"os"
 )
 
 // uploadToS3 uploads the contents of tickWrt.currenFileName to S3

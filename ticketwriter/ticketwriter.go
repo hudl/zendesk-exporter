@@ -18,9 +18,10 @@ import (
 type TicketWriter struct {
 	filePrefix string
 
-	awsAuth      aws.Auth
-	s3BucketName string
-	s3KeyPrefix  string
+	awsAuth        aws.Auth
+	s3BucketName   string
+	s3KeyPrefix    string
+	ksisStreamName string
 
 	maxFileSz       uint64
 	currentFileName string
@@ -29,7 +30,7 @@ type TicketWriter struct {
 // New(...) creates a new instance of a TicketWriter from the given parameters.
 // Using this method instead of using a struct initializer prevents clients from
 // having to import github.com/goamz/aws
-func New(maxFileSz uint64, filePrefix, s3BucketName, s3KeyPrefix, awsAccessKey, awsSecretKey string) TicketWriter {
+func New(maxFileSz uint64, filePrefix, s3BucketName, s3KeyPrefix, awsAccessKey, awsSecretKey, ksisStream string) TicketWriter {
 	tickWriter := TicketWriter{}
 	tickWriter.filePrefix = filePrefix
 
@@ -42,6 +43,7 @@ func New(maxFileSz uint64, filePrefix, s3BucketName, s3KeyPrefix, awsAccessKey, 
 	tickWriter.s3BucketName = s3BucketName
 	tickWriter.s3KeyPrefix = s3KeyPrefix
 	tickWriter.maxFileSz = maxFileSz
+	tickWriter.ksisStreamName = ksisStream
 
 	return tickWriter
 }
@@ -66,6 +68,8 @@ func (tickWrt *TicketWriter) Write(ticks []zego.Ticket, startTime string) {
 			log.Error("Error writing to file: %+v", err)
 		}
 		tickFile.WriteString("\n")
+
+		tickWrt.uploadToKinesis(jsonBytes, "partionKey-arbitrary")
 	}
 
 	// Get size of file to find out if we need to upload and delete it.

@@ -14,10 +14,11 @@ type ZendeskConfig struct {
 	Password string
 }
 type AWSConfig struct {
-	S3BucketName string
-	S3KeyPrefix  string
-	AccessKey    string
-	SecretKey    string
+	S3BucketName  string
+	S3KeyPrefix   string
+	KinesisStream string
+	AccessKey     string
+	SecretKey     string
 }
 type Config struct {
 	ZDConf      ZendeskConfig
