@@ -8,7 +8,8 @@
 		"AccessKey": "ACCESS_KEY",
 		"SecretKey": "SECRET_KEY",
 		"S3BucketName": "S3Bucket",
-		"S3KeyPrefix": "S3KeyPrefix"
+		"S3KeyPrefix": "S3KeyPrefix",
+		"KinesisStream": "STREAM_NAME"
 	},
-	"MaxFileSize": "64M"
+	"MaxFileSize": 1000000
 }
