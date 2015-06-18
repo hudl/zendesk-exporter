@@ -3,8 +3,8 @@
 	"GoVersion": "go1.3.3",
 	"Deps": [
 		{
-			"ImportPath": "github.com/adamar/ZeGo/zego",
-			"Rev": "e72c5956ce1210ac9e2b8fb4e1be44c0e2e39584"
+			"ImportPath": "github.com/davecgh/go-spew/spew",
+			"Rev": "3fdaf5cea8d23107b993d363e98992fa529dd713"
 		},
 		{
 			"ImportPath": "github.com/goamz/goamz/aws",
@@ -15,8 +15,17 @@
 			"Rev": "50f393d45473b635cab34f2b3e0bbcd103df29dc"
 		},
 		{
+			"ImportPath": "github.com/hudl/ZeGo/zego",
+			"Rev": "166acde37a9dfa90fd944bc86609d7545059bd0b"
+		},
+		{
 			"ImportPath": "github.com/op/go-logging",
 			"Rev": "fb0230561a6ba1cab17beb95f1faedc16584fdb8"
+		},
+		{
+			"ImportPath": "github.com/sendgridlabs/go-kinesis",
+			"Comment": "1.0.1-2-g9ed4b83",
+			"Rev": "9ed4b83e29f247a07183ffa59940a2f39ca05bc0"
 		},
 		{
 			"ImportPath": "github.com/vaughan0/go-ini",

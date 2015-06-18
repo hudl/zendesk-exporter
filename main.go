@@ -8,7 +8,7 @@ import (
 	"github.com/hudl/zendesk-exporter/ticketwriter"
 	"github.com/hudl/zendesk-exporter/zendesk"
 
-	"github.com/adamar/ZeGo/zego"
+	"github.com/hudl/ZeGo/zego"
 	golog "github.com/op/go-logging"
 )
 

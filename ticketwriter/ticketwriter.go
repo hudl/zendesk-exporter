@@ -5,10 +5,11 @@
 package ticketwriter
 
 import (
-	"github.com/adamar/ZeGo/zego"
 	"github.com/goamz/goamz/aws"
+	"github.com/hudl/ZeGo/zego"
 
 	"encoding/json"
+	"fmt"
 	"os"
 	"time"
 )
@@ -70,6 +71,15 @@ func (tickWrt *TicketWriter) Write(ticks []zego.Ticket, startTime string) {
 		tickFile.WriteString("\n")
 
 		tickWrt.uploadToKinesis(jsonBytes, "partionKey-arbitrary")
+
+		logString := fmt.Sprintf("Zendesk Ticket Id=%d Tags=%v CreatedAt=%q Subject=%q Submitter=%v Assignee=%v Group_Id=%v",
+			t.Id, t.Tags, t.CreatedAt, t.Subject, t.SubmitterId, t.AssigneeId, t.GroupId)
+		for _, field := range t.Custom_Fields {
+			logString += fmt.Sprintf(" %d=%q", field.Id, field.Value)
+		}
+
+		logString += fmt.Sprintf(" Channel=%q From=%q To=%q", t.Via.Channel, t.Via.Source.From, t.Via.Source.To)
+		log.Info(logString)
 	}
 
 	// Get size of file to find out if we need to upload and delete it.
