@@ -43,12 +43,6 @@ func (p *Poller) Poll() {
 		}
 		log.Info("Fetched %d tickets.", results.Count)
 
-		if results.Count == 0 || results.Tickets[len(results.Tickets)-1].Id == p.PrevTickId || results.Next_page == "" {
-			log.Info("Sleeping for 5 minutes then using the same start time")
-			time.Sleep(5 * time.Minute)
-			continue
-		}
-
 		p.TickWrt.Write(results.Tickets, p.StartTime)
 		p.PrevTickId = results.Tickets[len(results.Tickets)-1].Id
 		p.StartTime = fmt.Sprintf("%d", results.EndTime)
