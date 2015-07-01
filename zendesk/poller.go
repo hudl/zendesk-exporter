@@ -56,7 +56,7 @@ func (p *Poller) Poll() {
 		log.Info("Next start time is: %s (%s)", p.StartTime, startTime.Format("2006-01-02 15:04:05"))
 
 		//And we sleep for a reasonable amount of time
-		sleepTime := time.Duration(interpSleep(float32(results.Count))) * time.Second
+		sleepTime := 6 * time.Second
 		log.Info("Sleeping for %f seconds", sleepTime.Seconds())
 		time.Sleep(sleepTime)
 	}
