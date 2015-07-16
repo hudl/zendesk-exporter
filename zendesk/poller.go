@@ -39,15 +39,18 @@ func (p *Poller) Poll() {
 		results, err := p.Auth.IncrementalTicket(p.StartTime)
 		if err != nil {
 			log.Error("Error when polling for zendesk tickets with StartTime=%s: %+v", p.StartTime, err)
-			return
+			time.Sleep(6 * time.Second)
+			continue
 		}
 		log.Info("Fetched %d tickets.", results.Count)
 
-		p.TickWrt.Write(results.Tickets, p.StartTime)
-		p.PrevTickId = results.Tickets[len(results.Tickets)-1].Id
-		p.StartTime = fmt.Sprintf("%d", results.EndTime)
-		startTime := time.Unix(int64(results.EndTime), 0)
-		log.Info("Next start time is: %s (%s)", p.StartTime, startTime.Format("2006-01-02 15:04:05"))
+		if results.Count != 0 && results.Tickets[len(results.Tickets)-1].Id != p.PrevTickId && results.Next_page != "" {
+			p.TickWrt.Write(results.Tickets, p.StartTime)
+			p.PrevTickId = results.Tickets[len(results.Tickets)-1].Id
+			p.StartTime = fmt.Sprintf("%d", results.EndTime)
+			startTime := time.Unix(int64(results.EndTime), 0)
+			log.Info("Next start time is: %s (%s)", p.StartTime, startTime.Format("2006-01-02 15:04:05"))
+		}
 
 		//And we sleep for a reasonable amount of time
 		sleepTime := 6 * time.Second
