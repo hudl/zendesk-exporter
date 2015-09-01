@@ -13,10 +13,7 @@ import (
 const (
 	// Zendesk allows this endpoint to be hit no more than 10 times/minute
 	// so our minimum wait time should be 6 seconds
-	minIntervalSec = 6
-
-	// This may have to be tweaked to find a sweet spot
-	maxIntervalSec = 60
+	sleepTimeSec = 30
 )
 
 // A Poller contains all the information necessary to regularly
@@ -39,7 +36,7 @@ func (p *Poller) Poll() {
 		results, err := p.Auth.IncrementalTicket(p.StartTime)
 		if err != nil {
 			log.Error("Error when polling for zendesk tickets with StartTime=%s: %+v", p.StartTime, err)
-			time.Sleep(6 * time.Second)
+			time.Sleep(sleepTimeSec * time.Second)
 			continue
 		}
 		log.Info("Fetched %d tickets.", results.Count)
@@ -53,15 +50,8 @@ func (p *Poller) Poll() {
 		}
 
 		//And we sleep for a reasonable amount of time
-		sleepTime := 6 * time.Second
+		sleepTime := sleepTimeSec * time.Second
 		log.Info("Sleeping for %f seconds", sleepTime.Seconds())
 		time.Sleep(sleepTime)
 	}
-}
-
-// This is a vanilla interpolation between minIntervalSec and maxIntervalSec
-// count is number of tickets returned (0 - 1000)
-// Returns the length of time to sleep
-func interpSleep(count float32) int {
-	return int(maxIntervalSec + ((maxIntervalSec - minIntervalSec) * (count / (-1000))))
 }
