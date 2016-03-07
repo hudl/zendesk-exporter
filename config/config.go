@@ -20,9 +20,14 @@ type AWSConfig struct {
 	AccessKey     string
 	SecretKey     string
 }
+type IntercomConfig struct {
+	App    string
+	APIKey string
+}
 type Config struct {
 	ZDConf      ZendeskConfig
 	AWSConf     AWSConfig
+	ICConf      IntercomConfig
 	MaxFileSize uint64
 }
 

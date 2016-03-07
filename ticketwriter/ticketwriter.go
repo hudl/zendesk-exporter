@@ -7,6 +7,7 @@ package ticketwriter
 import (
 	"github.com/goamz/goamz/aws"
 	"github.com/hudl/ZeGo/zego"
+	"gopkg.in/intercom/intercom-go.v1"
 
 	"encoding/json"
 	"fmt"
@@ -26,12 +27,20 @@ type TicketWriter struct {
 
 	maxFileSz       uint64
 	currentFileName string
+
+	icClient *intercom.Client
+}
+
+var ignoreEmails = map[string]bool{
+	"noreply@hudl.com":      true,
+	"service@sumologic.com": true,
 }
 
 // New(...) creates a new instance of a TicketWriter from the given parameters.
 // Using this method instead of using a struct initializer prevents clients from
 // having to import github.com/goamz/aws
-func New(maxFileSz uint64, filePrefix, s3BucketName, s3KeyPrefix, awsAccessKey, awsSecretKey, ksisStream string) TicketWriter {
+func New(maxFileSz uint64, filePrefix, s3BucketName, s3KeyPrefix, awsAccessKey, awsSecretKey, ksisStream,
+	intercomApp, intercomKey string) TicketWriter {
 	tickWriter := TicketWriter{}
 	tickWriter.filePrefix = filePrefix
 
@@ -45,7 +54,8 @@ func New(maxFileSz uint64, filePrefix, s3BucketName, s3KeyPrefix, awsAccessKey, 
 	tickWriter.s3KeyPrefix = s3KeyPrefix
 	tickWriter.maxFileSz = maxFileSz
 	tickWriter.ksisStreamName = ksisStream
-
+	//tickWriter.icClient = intercom.NewClient("lsy960pt", "ro-9b70b162f5e4421e450f0a6cb7cd805f6219b346")
+	tickWriter.icClient = intercom.NewClient(intercomApp, intercomKey)
 	return tickWriter
 }
 
@@ -79,6 +89,16 @@ func (tickWrt *TicketWriter) Write(ticks []zego.Ticket, startTime string) {
 		}
 
 		logString += fmt.Sprintf(" Channel=%q From=%q To=%q", t.Via.Channel, t.Via.Source.From, t.Via.Source.To)
+		if t.Via.Source.From != nil {
+			src := t.Via.Source.From.(map[string]interface{})
+			if src["address"] != nil && !ignoreEmails[src["address"].(string)] {
+				logString += fmt.Sprintf(" FromEmail=%q", src["address"])
+				user, err := tickWrt.icClient.Users.FindByEmail(src["address"].(string))
+				if err == nil {
+					logString += fmt.Sprintf(" UserId=%d", user.UserID)
+				}
+			}
+		}
 		log.Info(logString)
 	}
 

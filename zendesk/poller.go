@@ -4,9 +4,9 @@ package zendesk
 
 import (
 	"fmt"
-	"github.com/hudl/ZeGo/zego"
 	"time"
 
+	"github.com/hudl/ZeGo/zego"
 	"github.com/hudl/zendesk-exporter/ticketwriter"
 )
 
